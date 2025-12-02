@@ -1,0 +1,71 @@
+/* General Body and Centering */
+body {
+    font-family: 'Arial', sans-serif; /* A common, readable font */
+    background-color: #f4f4f9; /* Light, soft background */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+    margin: 0;
+}
+
+/* Form Container Styling */
+.form {
+    background-color: #ffffff; /* White background for the form box */
+    padding: 40px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 100%;
+    max-width: 350px; /* Limit the form's width */
+}
+
+/* Form Layout */
+.login_form {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    gap: 15px; /* Space between form elements */
+}
+
+/* Label Styling */
+label {
+    font-size: 14px;
+    color: #333333; /* Darker text for readability */
+    font-weight: bold;
+    margin-bottom: 5px; /* Space below the label */
+}
+
+/* Input Field Styling */
+input[type="text"], 
+input[type="password"] {
+    padding: 12px;
+    border: 1px solid #cccccc; /* Light border */
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%; /* Full width of the container */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, 
+input[type="password"]:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none; /* Remove default browser outline */
+}
+
+/* Button Styling */
+button[type="submit"] {
+    background-color: #007bff; /* Primary blue color */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px; /* Space above the button */
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
