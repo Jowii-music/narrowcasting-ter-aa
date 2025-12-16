@@ -9,13 +9,14 @@ loginForm.addEventListener('submit', async (e) => {
     const res = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ username, password })
     });
 
     const data = await res.json();
 
     if (res.ok) {
-        window.location.href = 'admin.html'
+        window.location.href = 'admin.html';   
     } else {
         alert('Login failed: ' + data.message);
     }

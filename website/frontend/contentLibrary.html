@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Content Library</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo"><a href="admin.html">Admin Panel</a></div>
+    <ul class="nav-links">
+      <li><a href="#">Slides</a></li>
+      <li><a href="contentLibrary.html">Content Library</a></li>
+      <li><a href="upload.html">Create Slide</a></li>
+    </ul>
+  </nav>
+
+<!-- Page Header -->
+    <header class="library-header">
+        <h1>Content Library</h1>
+        <p>Manage your slides, videos, and other content here.</p>
+    </header>
+
+    <!-- Filters/Search -->
+    <section class="library-filters">
+        <input type="text" id="search" placeholder="Search content...">
+        <select id="filter-type">
+            <option value="">All types</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="text">Text</option>
+        </select>
+        <button id="filter-btn">Filter</button>
+    </section>
+
+    <!-- Content Grid -->
+    <main class="content-grid">
+
+    </main>
+
+    <script src="library.js"></script>
