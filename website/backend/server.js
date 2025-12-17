@@ -134,7 +134,7 @@ app.post('/upload', requireLogin, upload.single('image'), async (req, res) => {
     }
 
     const bucketName = 'slides_bucket'; // Your Supabase bucket
-    const folderPath = 'img'
+    const folderPath = file.mimetype
     const bucketFileName = `${folderPath}/${uuidv4()}${path.extname(file.originalname)}`; // Unique backend filename
 
     // Upload to Supabase Storage
@@ -210,6 +210,72 @@ app.get('/slides', requireLogin, async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
+app.patch('/slides/:id', requireLogin, async(req, res)=>{
+  const slideId = Number(req.params.id);
+  const {name, duration, display} = req.body;
+
+  try {
+    const { data, error } = await supabase
+      .from('slides')
+      .update({ name, duration: Number(duration), display })
+      .eq('id', slideId)
+      .select()
+      .single();
+
+    if (error) {
+      return res.status(500).json({ message: 'Failed to update slide', error: error.message });
+    }
+
+    res.json({ message: 'Slide updated successfully', slide: data });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+
+})
+
+// Delete slide
+app.delete('/slides/:id', requireLogin, async (req, res) => {
+  const slideId = Number(req.params.id);
+
+  try {
+    // First, fetch the slide to get its storage path
+    const { data: slide, error: fetchError } = await supabase
+      .from('slides')
+      .select('*')
+      .eq('id', slideId)
+      .single();
+
+    if (fetchError || !slide) {
+      return res.status(404).json({ message: 'Slide not found', error: fetchError?.message });
+    }
+
+    // Delete file from Supabase Storage if exists
+    if (slide.bucketPath) {
+      const { error: storageError } = await supabase
+        .storage
+        .from('slides_bucket')
+        .remove([slide.bucketPath]);
+
+      if (storageError) console.error('Failed to remove file from storage', storageError.message);
+    }
+
+    // Delete slide record from database
+    const { error: deleteError } = await supabase
+      .from('slides')
+      .delete()
+      .eq('id', slideId);
+
+    if (deleteError) {
+      return res.status(500).json({ message: 'Failed to delete slide', error: deleteError.message });
+    }
+
+    res.json({ message: 'Slide deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 
 
 // ----------------- STATIC ROUTES -----------------
