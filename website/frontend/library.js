@@ -33,13 +33,13 @@ function renderSlides(slidesData) {
       <h3>${slide.name}</h3>
       ${slide.type === 'img'
         ? `<img src="${slide.url}" alt="${slide.name}" />`
-        : `<video src="${slide.url}" controls></video>`}
+        : `<video src="${slide.url}" alt="${slide.name}" controls></video>`}
       <p>Id: ${slide.id}</p>
       <p>Duration: ${slide.duration}s</p>
       <p>Display: ${slide.display}</p>
       <div class="actions">
         <button class="edit-btn" data-id="${slide.id}">Edit</button>
-        <button>Delete</button>
+        <button class="delete-btn">Delete</button>
       </div>
     `;
 
@@ -83,7 +83,7 @@ document.getElementById('closeEdit').addEventListener('click', () => {
   editModal.classList.remove('show');
 });
 
-// Optional: close modal if clicking outside content
+// Close modal if clicking outside content
 editModal.addEventListener('click', (e) => {
   if (e.target === editModal) {
     editModal.classList.remove('show');
@@ -125,7 +125,7 @@ document.getElementById('saveEdit').addEventListener('click', async () => {
 });
 
 document.addEventListener('click', async (e) => {
-  if (!e.target.matches('.content-item .actions button:last-child')) return; // Delete button
+  if (!e.target.matches('.delete-btn')) return; // Delete button
 
   const slideEl = e.target.closest('.content-item');
   const slideId = Number(slideEl.querySelector('.edit-btn').dataset.id);
@@ -174,5 +174,21 @@ document.getElementById('search').addEventListener('input', filterSlides);
 
 // Type filter
 document.getElementById('filter-type').addEventListener('change', filterSlides);
+
+    async function checkAuth() {
+      try {
+        const res = await fetch('http://localhost:3000/auth/check', {
+          credentials: 'include'
+        });
+
+        if (!res.ok) {
+          window.location.href = 'index.html';
+        }
+      } catch {
+        console.log('logged in: do nothing');
+      }
+    }
+
+  checkAuth();
 
 

@@ -126,56 +126,71 @@ const upload = multer({ storage });
 app.post('/upload', requireLogin, upload.single('image'), async (req, res) => {
   try {
     const file = req.file;
-    const { name, duration, display, fileName, type } = req.body; // All provided by frontend
+    const { name, duration, display } = req.body;
 
-    if (!file) return res.status(400).json({ message: 'No file uploaded' });
-    if (!name || !duration || !display || !fileName || !type) {
+    if (!file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    if (!name || !duration || !display) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const bucketName = 'slides_bucket'; // Your Supabase bucket
-    const folderPath = file.mimetype
-    const bucketFileName = `${folderPath}/${uuidv4()}${path.extname(file.originalname)}`; // Unique backend filename
+    // Decide type from mimetype
+    let type;
+    let folder;
+
+    if (file.mimetype.startsWith('image/')) {
+      type = 'img';
+      folder = 'img';
+    } else if (file.mimetype.startsWith('video/')) {
+      type = 'vid';
+      folder = 'vid';
+    } else {
+      return res.status(400).json({ message: 'Unsupported file type' });
+    }
+
+    const bucketName = 'slides_bucket';
+    const bucketFileName = `${folder}/${uuidv4()}${path.extname(file.originalname)}`;
 
     // Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from(bucketName)
       .upload(bucketFileName, file.buffer, {
         cacheControl: '3600',
         upsert: false,
-        contentType: file.mimetype // use the actual file type, not frontend input
+        contentType: file.mimetype
       });
 
-    if (uploadError) return res.status(500).json({ message: 'Upload failed', error: uploadError.message });
+    if (uploadError) {
+      return res.status(500).json({ message: 'Upload failed', error: uploadError.message });
+    }
 
-    // Build the bucketPath automatically
-
-    // Insert into database
-    const durationNum = Number(duration);
-
-    const { data: dbData, error: dbError } = await supabase
+    // Insert into DB
+    const { data, error } = await supabase
       .from('slides')
       .insert([{
         name,
-        duration: durationNum,
+        duration: Number(duration),
         display,
-        fileName: name,
-        type: type,
-        bucketPath: `${bucketFileName}`
+        fileName: name, // or rename this column later if it annoys you
+        type,
+        bucketPath: bucketFileName
       }])
       .select()
       .single();
 
-    if (dbError) {
-      console.error('Supabase insert error:', dbError);
-      return res.status(500).json({ message: 'DB insert failed', error: dbError.message });
+    if (error) {
+      return res.status(500).json({ message: 'DB insert failed', error: error.message });
     }
 
-    res.status(201).json({ message: 'File uploaded successfully', file: dbData });
+    res.status(201).json({ message: 'File uploaded successfully', file: data });
+
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
 
 app.get('/slides', requireLogin, async (req, res) => {
   try {
@@ -275,6 +290,68 @@ app.delete('/slides/:id', requireLogin, async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
+
+app.get('/dashboard', requireLogin, async (req, res) => {
+  try {
+    // total slides
+    const { data: totalData, error: totalError } = await supabase
+      .from('slides')
+      .select('id', { count: 'exact' });
+    if (totalError) throw totalError;
+    const totalSlides = totalData.length;
+
+    // image count
+    const { data: imageData, error: imageError } = await supabase
+      .from('slides')
+      .select('id', { count: 'exact' })
+      .eq('type', 'img');
+    if (imageError) throw imageError;
+    const imageCount = imageData.length;
+
+    // last upload + most recent slide name
+    const { data: lastData, error: lastError } = await supabase
+      .from('slides')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    if (lastError) throw lastError;
+    const lastUpload = lastData.created_at;
+    const mostRecentSlide = lastData.name;
+
+    // most used type
+    const { data: typeData, error: typeError } = await supabase
+      .from('slides')
+      .select('type');
+    if (typeError) throw typeError;
+    const counts = {};
+    typeData.forEach(s => counts[s.type] = (counts[s.type] || 0) + 1);
+    const mostUsedType = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+
+    // average duration
+    const { data: durationData, error: durationError } = await supabase
+      .from('slides')
+      .select('duration');
+    if (durationError) throw durationError;
+    const totalDuration = durationData.reduce((sum, s) => sum + s.duration, 0);
+    const averageDuration = durationData.length ? Math.round(totalDuration / durationData.length) : 0;
+
+    // send final JSON
+    res.json({
+      totalSlides,
+      imageCount,
+      lastUpload,
+      mostUsedType,
+      averageDuration,
+      mostRecentSlide
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to load dashboard data' });
+  }
+});
+
 
 
 

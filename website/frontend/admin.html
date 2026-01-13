@@ -10,7 +10,6 @@
   <nav class="navbar">
     <div class="logo">Admin Panel</div>
     <ul class="nav-links">
-      <li><a href="#">Slides</a></li>
       <li><a href="contentLibrary.html">Content Library</a></li>
       <li><a href="upload.html">Create Slide</a></li>
     </ul>
@@ -22,30 +21,33 @@
       <div class="stats">
         <div class="card">
           <h3>Total Slides</h3>
-          <p>24</p>
+          <p id="total-slides">–</p>
         </div>
         <div class="card">
           <h3>Images in Library</h3>
-          <p>132</p>
+          <p id="image-count">–</p>
         </div>
         <div class="card">
           <h3>Last Upload</h3>
-          <p>Today</p>
+          <p id="last-upload">–</p>
         </div>
-      </div>
+</div>
+
       <a class="upload-btn" href="/upload.html">Go to Upload Page</a>
+      <a class="upload-btn" href="/contentLibrary.html">Go to the Content Library</a>
     </section>
 
     <section class="details">
       <h2>General Data</h2>
       <p>Here you can see some small general data about your slides, uploads, and activity.</p>
       <ul class="data-list">
-        <li>Most used file type: PNG</li>
-        <li>Average slide duration: 8 seconds</li>
-        <li>Most recently added slide: "Storefront Promo"</li>
+        <li>Most used file type: <span id="most-used-type">–</span></li>
+        <li>Average slide duration: <span id="avg-duration">–</span> seconds</li>
+        <li>Most recently added slide: <span id="recent-slide">–</span></li>
+
       </ul>
     </section>
   </main>
-
+  <script src="dashboard.js"></script>
 </body>
 </html>

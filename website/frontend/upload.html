@@ -9,7 +9,6 @@
       <nav class="navbar">
     <div class="logo"> <a href="admin.html">Admin Panel</a></div>
     <ul class="nav-links">
-      <li><a href="#">Slides</a></li>
       <li><a href="contentLibrary.html">Content Library</a></li>
       <li><a href="upload.html">Create Slide</a></li>
     </ul>
@@ -35,18 +34,8 @@
       </label>
 
       <label>
-        Filename
-        <input type="text" name="fileName" required>
-      </label>
-
-      <label>
-        Type
-        <input type="text" name="type" required>
-      </label>
-
-      <label>
         Select Image (max 50MB)
-        <input type="file" name="image" accept="image/*" required>
+        <input type="file" name="image" accept="image/*, video/*" required>
       </label>
 
       <button type="submit">Upload</button>
@@ -57,47 +46,5 @@
 
   <!-- your same script from before -->
 </body>
-  <script>
-    const form = document.getElementById('uploadForm');
-    const resultDiv = document.getElementById('result');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch('http://localhost:3000/upload', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          resultDiv.innerHTML = `<p style="color:green;">Upload successful! ID: ${data.file.id}</p>`;
-        } else {
-          resultDiv.innerHTML = `<p style="color:red;">Error: ${data.message||'unauthorized'}</p>`;
-        }
-      } catch (err) {
-        resultDiv.innerHTML = `<p style="color:red;">Server error: ${err.message}</p>`;
-      }
-    });
-
-    async function checkAuth() {
-      try {
-        const res = await fetch('http://localhost:3000/auth/check', {
-          credentials: 'include'
-        });
-
-        if (!res.ok) {
-          window.location.href = 'index.html';
-        }
-      } catch {
-        console.log('logged in: do nothing');
-      }
-    }
-
-  checkAuth();
-  </script>
+  <script src="upload.js"></script>
 </html>
