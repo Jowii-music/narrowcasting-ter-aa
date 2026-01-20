@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slide Builder</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo"> <a href="admin.html">Admin Panel</a></div>
+  <ul class="nav-links">    
+    <li><a href="contentLibrary.html">Content Library</a></li>
+    <li><a href="upload.html">Create slide</a></li>
+    <li><a href="createImg.html">Text to img</a></li>
+  </ul>
+</nav>
+
+<main class="builder">
+
+  <!-- LEFT: CONTROLS -->
+  <aside class="controls">
+    <h2>Text Settings</h2>
+
+    <label>
+      Text
+      <input type="text" id="textInput" placeholder="Enter text">
+    </label>
+
+    <label>
+      Font Size
+      <input type="number" id="fontSize" value="48" min="10" max="200">
+    </label>
+
+    <label class="color-label">
+      Text Color
+      <input type="color" id="textColor" value="#000000">
+    </label>
+
+    <label>
+      Background Color
+      <input type="color" id="bgColor" value="#ffffff">
+    </label>
+
+    <label>
+      Background Image (optional)
+      <input type="file" id="bgImage" accept="image/*">
+    </label>
+  </aside>
+
+  <!-- CENTER: CANVAS -->
+  <section class="workspace">
+    <canvas id="canvas" width="1280" height="720"></canvas>
+  </section>
+
+  <!-- RIGHT: ACTIONS -->
+  <aside class="actions">
+    <h2>Actions</h2>
+
+    <button id="downloadBtn">Download Slide</button>
+    <button id="resetBtn" class="secondary">Reset</button>
+  </aside>
+
+</main>
+
+<script src="canvas.js"></script>
+</body>
+</html>

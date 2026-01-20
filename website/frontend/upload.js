@@ -38,4 +38,34 @@
       }
     }
 
+    const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+
+fileInput.addEventListener('change', () => {
+  preview.innerHTML = ''; // clear old preview
+
+  const file = fileInput.files[0];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+
+  if (file.type.startsWith('image/')) {
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.maxWidth = '100%';
+    img.style.maxHeight = '200px';
+    preview.appendChild(img);
+  }
+
+  if (file.type.startsWith('video/')) {
+    const video = document.createElement('video');
+    video.src = url;
+    video.controls = true;
+    video.style.maxWidth = '100%';
+    video.style.maxHeight = '200px';
+    preview.appendChild(video);
+  }
+});
+
+
   checkAuth();

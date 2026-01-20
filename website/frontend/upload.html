@@ -11,6 +11,7 @@
     <ul class="nav-links">
       <li><a href="contentLibrary.html">Content Library</a></li>
       <li><a href="upload.html">Create Slide</a></li>
+      <li><a href="createImg.html">Text to img</a></li>
     </ul>
   </nav>
 
@@ -25,7 +26,7 @@
 
       <label>
         Duration (seconds)
-        <input type="number" name="duration" required>
+        <input type="number" name="duration" required value="15">
       </label>
 
       <label>
@@ -35,8 +36,10 @@
 
       <label>
         Select Image (max 50MB)
-        <input type="file" name="image" accept="image/*, video/*" required>
+        <input id="fileInput" type="file" name="image" accept="image/*, video/*" required>
       </label>
+
+      <div id="preview"> </div>
 
       <button type="submit">Upload</button>
     </form>

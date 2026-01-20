@@ -243,6 +243,17 @@ button[type="submit"]:hover {
     font-size: 16px;
 }
 
+#preview {
+  margin-top: 10px;
+}
+
+#preview img,
+#preview video {
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+
 /* ========================= */
 /* LIBRARY PAGE HEADER */
 /* ========================= */
@@ -468,4 +479,174 @@ button[type="submit"]:hover {
 #closeEdit:hover {
   background: #cfcfcf;
 }
+
+.builder {
+  display: grid;
+  grid-template-columns: 260px 1fr 220px;
+  gap: 20px;
+  padding: 20px;
+  height: calc(100vh - 70px); /* navbar height safety */
+  box-sizing: border-box;
+}
+
+/* ========================= */
+/* CONTROLS PANEL */
+/* ========================= */
+
+.controls,
+.actions {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.controls h2,
+.actions h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+  gap: 6px;
+}
+
+.controls input {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.controls input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* ========================= */
+/* CANVAS WORKSPACE */
+/* ========================= */
+
+.workspace {
+  background: #eaeaf0;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+canvas {
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  max-width: 100%;
+  height: auto;
+}
+
+/* ========================= */
+/* ACTION BUTTONS */
+/* ========================= */
+
+.actions button {
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#downloadBtn {
+  background: #3498db;
+  color: white;
+}
+
+#downloadBtn:hover {
+  background: #2179b8;
+}
+
+.secondary {
+  background: #e0e0e0;
+}
+
+.secondary:hover {
+  background: #cfcfcf;
+}
+
+/* ========================= */
+/* RESPONSIVE (minimal, intentional) */
+/* ========================= */
+
+@media (max-width: 1000px) {
+  .builder {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .controls,
+  .actions {
+    order: unset;
+  }
+
+  .workspace {
+    padding: 20px 0;
+  }
+}
+
+.color-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+input[type="color"] {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Chrome / Edge / Safari */
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Firefox */
+input[type="color"]::-moz-color-swatch {
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+a:visited{
+    color: white;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
 
