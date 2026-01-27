@@ -16,6 +16,7 @@
 
         if (response.ok) {
           resultDiv.innerHTML = `<p style="color:green;">Upload successful! ID: ${data.file.id}</p>`;
+          window.location.href = "contentLibrary.html"  
         } else {
           resultDiv.innerHTML = `<p style="color:red;">Error: ${data.message||'unauthorized'}</p>`;
         }
@@ -66,6 +67,5 @@ fileInput.addEventListener('change', () => {
     preview.appendChild(video);
   }
 });
-
 
   checkAuth();

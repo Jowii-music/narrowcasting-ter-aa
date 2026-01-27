@@ -649,4 +649,8 @@ a:hover{
     text-decoration: none;
 }
 
+.content-item.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
 

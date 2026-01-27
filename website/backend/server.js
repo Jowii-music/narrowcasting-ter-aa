@@ -191,12 +191,46 @@ app.post('/upload', requireLogin, upload.single('image'), async (req, res) => {
   }
 });
 
+app.patch('/slides/reorder', requireLogin, async (req, res) => {
+  try {
+    const { order } = req.body; // [{ id: 2, sort_index: 1 }, ...]
+
+    if (!Array.isArray(order) || order.length === 0) {
+      return res.status(400).json({ message: 'Invalid order payload' });
+    }
+
+    // Update each row by id (WHERE id = ...)
+    const results = await Promise.all(
+      order.map(({ id, sort_index }) =>
+        supabase
+          .from('slides')
+          .update({ sort_index })   // SET sort_index = ...
+          .eq('id', id)             // WHERE id = ...
+          .select('id')             // return updated row id so we can verify
+          .single()
+      )
+    );
+
+    const firstError = results.find(r => r.error)?.error;
+    if (firstError) {
+      console.error('reorder update error:', firstError);
+      return res.status(500).json({ message: 'Failed to save order', error: firstError.message });
+    }
+
+    res.json({ message: 'Order saved' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 
 app.get('/slides', requireLogin, async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('slides')
       .select('*')
+      .order('sort_index', {ascending: true, nullsFirst: false})
       .order('id', { ascending: true });
 
     if (error) {
@@ -239,6 +273,7 @@ app.patch('/slides/:id', requireLogin, async(req, res)=>{
       .single();
 
     if (error) {
+      console.log(error)
       return res.status(500).json({ message: 'Failed to update slide', error: error.message });
     }
 
